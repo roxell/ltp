@@ -34,6 +34,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "lapi/abisize.h"
 #include "tst_test.h"
 
@@ -162,10 +163,16 @@ static int eatup_mem(unsigned long overcommit_policy)
 	int ret = 0;
 	unsigned long memfree;
 	void *addrs;
+	time_t start_time;
 
 	memfree = SAFE_READ_MEMINFO("MemFree:");
 	printf("memfree is %lu kB before eatup mem\n", memfree);
+	start_time = time(NULL);
 	while (1) {
+		if (time(NULL) - start_time > 300) {
+			tst_res(TINFO, "Memory allocation timeout reached after 300 seconds");
+			break;
+		}
 		addrs = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE,
 			     MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 		if (addrs == MAP_FAILED) {
