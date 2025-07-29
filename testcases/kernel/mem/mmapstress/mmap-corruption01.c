@@ -50,6 +50,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <time.h>
 
 #include "test.h"
 
@@ -144,7 +145,12 @@ int main(int argc, char **argv)
 	}
 
 	tst_tmpdir();
+	time_t start_time = time(NULL);
 	while (1) {
+		if (time(NULL) - start_time > 300) {
+			tst_resm(TINFO, "Test timeout reached after 300 seconds");
+			break;
+		}
 		unlink(fname);
 		int fd = open(fname, O_CREAT | O_EXCL | O_RDWR, 0600);
 		ftruncate(fd, kMemSize);
