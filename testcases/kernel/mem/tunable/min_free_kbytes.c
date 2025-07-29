@@ -195,7 +195,7 @@ static void check_monitor(void)
 	unsigned long tune;
 	unsigned long memfree;
 
-	while (end) {
+	while (!end) {
 		memfree = SAFE_READ_MEMINFO("MemFree:");
 		tune = TST_SYS_CONF_LONG_GET(MIN_FREE_KBYTES);
 
