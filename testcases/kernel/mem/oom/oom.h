@@ -7,6 +7,7 @@
 #define OOM_H_
 
 #include <pthread.h>
+#include <time.h>
 #include "config.h"
 #include "numa_helper.h"
 
@@ -136,8 +137,14 @@ static void child_alloc(int testcase, int lite, int threads)
 	}
 
 	/* wait for one of threads to exit whole process */
-	while (1)
+	time_t start_time = time(NULL);
+	while (1) {
+		if (time(NULL) - start_time > 300) {
+			tst_res(TINFO, "OOM test timeout reached after 300 seconds");
+			break;
+		}
 		sleep(1);
+	}
 out:
 	exit(1);
 }
