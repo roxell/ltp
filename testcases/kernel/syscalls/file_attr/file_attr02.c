@@ -18,6 +18,11 @@
 #define BLOCKS 128
 #define PROJID 16
 
+static const char *kconfigs[] = {
+	"CONFIG_XFS_FS=y | CONFIG_XFS_FS=m",
+	NULL
+};
+
 static int fd = -1;
 static int dfd = -1;
 static struct fsxattr xattr;
@@ -105,5 +110,6 @@ static struct tst_test test = {
 	.bufs = (struct tst_buffers []) {
 		{&attr, .size = sizeof(struct file_attr)},
 		{}
-	}
+	},
+	.needs_kconfigs = kconfigs,
 };
