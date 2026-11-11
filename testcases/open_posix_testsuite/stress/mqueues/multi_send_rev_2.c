@@ -18,7 +18,6 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 #include <string.h>
-#include <getopt.h>
 #include <pthread.h>
 #include <limits.h>
 #include <mqueue.h>
@@ -29,6 +28,7 @@
 #define MSG_SIZE	128
 #define MAX_MSG		5
 #define Max_Threads	100
+#define DEFAULT_THREADS	1
 
 static const char *s_msg_ptr[] =
     { "send_1 1", "send_1 2", "send_1 3", "send_1 4", "send_1 5" };
@@ -85,8 +85,10 @@ int test_main(int argc, char **argv)
 	printf("_POSIX_MESSAGE_PASSING is not defined \n");
 	return PTS_UNRESOLVED;
 #endif */
-	if ((2 != argc) || ((num = atoi(argv[1])) <= 0)) {
-		fprintf(stderr, "Usage: %s number_of_threads\n", argv[0]);
+	if (argc < 2) {
+		num = DEFAULT_THREADS;
+	} else if ((num = atoi(argv[1])) <= 0) {
+		fprintf(stderr, "Usage: %s [number_of_threads]\n", argv[0]);
 		return PTS_FAIL;
 	}
 	if (num > Max_Threads) {
